@@ -1,2 +1,4 @@
 # COL-781-Assignments
-Computer Graphics Coursework (IIT Delhi) - Prof. Prem Kalra (Sem-2, 2018-19) 
+## Computer Graphics Coursework (IIT Delhi)
+> By Anoop, 2015CS10265 and Abhishek, 2015CS10424
+
