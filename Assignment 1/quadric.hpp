@@ -1,13 +1,16 @@
 #ifndef __QUADRIC__
 #define __QUADRIC__
 
+#include "point.hpp"
+#include "ray.hpp"
 #include "object.hpp"
 
 class Quadric : public Object{
 public:
     Quadric(const Eigen::Matrix4d& m);
 
-    virtual bool intersect(const Ray& r, double& t) override;
+    virtual bool intersect(Ray& r, double& t) override;
+    virtual Ray get_normal(Point& p) override;
 
 private:
     Eigen::Matrix4d mat;
