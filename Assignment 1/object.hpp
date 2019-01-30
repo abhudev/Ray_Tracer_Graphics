@@ -7,9 +7,9 @@
 
 class Object{
 public:
-    double reflectivity = 0.5;
+    double reflectivity = 0.001;
     double transparency = 0;
-    double mu = 1;
+    double mu = 1.33;
     double s_exp = 1;
     Eigen::Vector3d kd = {0.2,0.2,0.2};
     Eigen::Vector3d ks = {0.3,0.3,0.3};

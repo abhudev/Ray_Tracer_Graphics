@@ -2,6 +2,8 @@
 #define __GLOBAL__
 
 #include <iostream>
+#include <stdio.h>
+#include <omp.h>
 #include <Eigen/Dense>
 
 const int MAX_TRACE_DEPTH = 5;

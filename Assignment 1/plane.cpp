@@ -35,6 +35,11 @@ bool Plane::intersect(Ray& r, double& t){
 }
 
 void Plane::get_normal(Point& p, Ray& r){
-    if(abs(normal.dot(p-pt)) > eps) throw std::runtime_error("Point not on the plane");
+    if(abs(normal.dot(p-pt)) > eps){
+        printf("p: %f, %f, %f\n",p.pt[0],p.pt[1],p.pt[2]);
+        printf("pt: %f, %f, %f\n",pt.pt[0],pt.pt[1],pt.pt[2]);
+        printf("n: %f, %f, %f\n",normal[0],normal[1],normal[2]);
+        throw std::runtime_error("Point not on the plane");
+    }
     r = Ray(p,normal);
 }
