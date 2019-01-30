@@ -1,7 +1,7 @@
 #include "polygon.hpp"
 
 Polygon::Polygon(std::vector<Point>& pts): Object(), vertices(pts) {
-    if(vertices.size() < 3) throw "Polygon requires atleast 3 vertices";
+    if(vertices.size() < 3) throw std::runtime_error("Polygon requires atleast 3 vertices");
     for(int i=0;i<vertices.size();i++) edges.push_back(vertices[(i+1)%vertices.size()] - vertices[i]);
     Eigen::Vector3d p = vertices[1] - vertices[0];
     Eigen::Vector3d q = vertices[2] - vertices[1];
@@ -20,7 +20,7 @@ bool Polygon::intersect(Ray& r, double& t){
 }
 
 bool Polygon::contained(const Point& p){
-    if(normal.dot(vertices[0] - p) != 0) throw "Point not on the plane";
+    if(normal.dot(vertices[0] - p) != 0) throw std::runtime_error("Point not on the plane");
 
     bool not_valid = true;
     Eigen::Vector3d zero_vec(0,0,0), dir;
@@ -45,4 +45,13 @@ bool Polygon::contained(const Point& p){
         if(t1 > 0 && t1 < 1 && t2 >= 0) count++;            // t2 == 0 - Point on the edge case
     }
     return count%2 == 1;
+}
+
+void Polygon::get_normal(Point& p, Ray& r){
+    if(contained(p)) throw std::runtime_error("Point not inside the polygon");
+    r = Ray(p,normal);
+}
+
+Eigen::Vector3d Polygon::get_this_normal(){
+    return normal;
 }

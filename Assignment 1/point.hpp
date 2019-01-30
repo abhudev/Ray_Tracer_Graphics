@@ -2,6 +2,7 @@
 #define __Point__
 
 #include <Eigen/Dense>
+#include <vector>
 
 // Note - This class is defined just to differentiate between vector and point
 
@@ -15,6 +16,7 @@ public:
     Point(const Point& p);
 
     Eigen::Vector3d operator- (const Point& p) const;
+    double distance(Point& p);
 };
 
 inline Eigen::Vector3d Point::operator- (const Point& p) const{

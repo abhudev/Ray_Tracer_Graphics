@@ -1,13 +1,25 @@
 #include "plane.hpp"
 
-Plane::Plane(const Ray& r): Object(), normal(r.rd) {
+Plane::Plane() {}
+
+Plane::Plane(const Ray& r): Object(), normal(r.rd), pt(r.ro) {
     normal.normalize();
-    dist = normal.dot(r.ro.pt);
+    dist = -1*normal.dot(r.ro.pt);
 }
 
-Plane::Plane(const Point& p, const Eigen::Vector3d& v): Object(), normal(v) {
+Plane::Plane(const Point& p, const Eigen::Vector3d& v): Object(), normal(v), pt(p) {
     normal.normalize();
-    dist = normal.dot(p.pt);
+    dist = -1*normal.dot(p.pt);
+}
+
+Plane::Plane(const Ray& r, const Color& c): Object(), normal(r.rd), pt(r.ro), clr(c) {
+    normal.normalize();
+    dist = -1*normal.dot(r.ro.pt);
+}
+
+Plane::Plane(const Point& p, const Eigen::Vector3d& v, const Color& c): Object(), normal(v), pt(p), clr(c) {
+    normal.normalize();
+    dist = -1*normal.dot(p.pt);
 }
 
 bool Plane::intersect(Ray& r, double& t){
@@ -16,6 +28,13 @@ bool Plane::intersect(Ray& r, double& t){
 
     // Handle the case when vd is positive - Refer slides
 
-    t = abs(-1*(normal.dot(r.ro.pt) + dist)/vd);
+    double tmp = -1*(normal.dot(r.ro.pt) + dist)/vd;
+    if(tmp < 0) return false;
+    t = tmp;
     return true;
+}
+
+void Plane::get_normal(Point& p, Ray& r){
+    if(abs(normal.dot(p-pt)) > eps) throw std::runtime_error("Point not on the plane");
+    r = Ray(p,normal);
 }

@@ -12,7 +12,7 @@ public:
     Box(const Point& p1, const Point& p2, const Point& p3, const Point& p4);
 
     virtual bool intersect(Ray& r, double& t) override;
-    virtual Ray get_normal(Point& p) override;
+    virtual void get_normal(Point& p, Ray& r) override;
 
 private:
     std::vector<Point> vertices;        // a b | e f

@@ -10,15 +10,16 @@ public:
     Polygon(std::vector<Point>& pts);       // Polygon edges are assumed between consecutive vertices
 
     virtual bool intersect(Ray& r, double& t) override;
-    virtual Ray get_normal(Point& p) override;
+    virtual void get_normal(Point& p, Ray& r) override;
     
     bool contained(const Point& p);
+    Eigen::Vector3d get_this_normal();
 
 private:
     std::vector<Point> vertices;            // List of vertices
     double dist;                            // Distance from origin
     Eigen::Vector3d normal;                 // Normal
-    std::vector<Eigen::Vector3d> edges      // Edges
+    std::vector<Eigen::Vector3d> edges;     // Edges
 };
 
 #endif

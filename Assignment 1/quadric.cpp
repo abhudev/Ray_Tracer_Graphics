@@ -20,3 +20,13 @@ bool Quadric::intersect(Ray& r, double& t){
     t = -1*b < disc_sq ? (disc_sq-b)/(2*a) : (-1*b-disc_sq)/(2*a);
     return true;
 }
+
+void Quadric::get_normal(Point& p, Ray& r){
+    // TODO - Check if point is on the quadric
+    Eigen::Vector4d p_homo(p.pt[0],p.pt[1],p.pt[2],1);
+    Eigen::Vector3d n_dir;
+    for(int i=0;i<3;i++) for(int j=0;j<4;j++){
+        n_dir[i] = mat(i,j)*p_homo[j];
+    }
+    r = Ray(p,n_dir);
+}
