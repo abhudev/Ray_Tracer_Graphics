@@ -40,7 +40,7 @@ void recursive_trace(Ray& startRay, Object* startObj, std::vector<Object*>& list
     double tmin = 1e7;
     startRay.rd.normalize();
 
-    // printf("startObj: %d | Depth: %d\n",startObj->id, depth);
+    // printf("Depth: %d\n", depth);
     // printf("startRay_pt: %f, %f, %f\n",startRay.ro.pt[0],startRay.ro.pt[1],startRay.ro.pt[2]);
     // printf("startRay: %f, %f, %f\n",startRay.rd[0],startRay.rd[1],startRay.rd[2]);
     
@@ -57,6 +57,7 @@ void recursive_trace(Ray& startRay, Object* startObj, std::vector<Object*>& list
         return;
     }
     Point rayPoint = startRay.get_pt(tmin);
+    // printf("rayPoint: %f, %f, %f\n",rayPoint.pt[0],rayPoint.pt[1],rayPoint.pt[2]);
     // :: Phong illumination model ::    
     Color Ip;
     light_src_interaction(rayPoint, objmin, list_obj, list_light_src, startRay.rd, bk_plane, Ip);
@@ -69,13 +70,18 @@ void recursive_trace(Ray& startRay, Object* startObj, std::vector<Object*>& list
     Color reflected_component, refracted_component;
     
     Ray normal_ray;
-    objmin->get_normal(rayPoint,normal_ray);
+    bool check_normal = objmin->get_normal(rayPoint,normal_ray);
+    if(!check_normal)
+    {
+        clr = Ip;
+        return;
+    }
     Eigen::Vector3d normal_rd = normal_ray.rd;
 
     double refract_coeff = objmin->transparency;    
     double check_inside = normal_rd.dot(startRay.rd);
 
-    if(check_inside > 0)
+    if(check_inside > eps)
         refract_coeff = 1;
 
     // Reflection
@@ -83,7 +89,7 @@ void recursive_trace(Ray& startRay, Object* startObj, std::vector<Object*>& list
     {
         Eigen::Vector3d reflected_rd, inv_start_rd;
         inv_start_rd = -1.0*startRay.rd;
-        if(check_inside > 0)
+        if(check_inside > eps)
         {
             Eigen::Vector3d inv_normal_rd = -1.0*normal_rd;
             get_reflected(inv_normal_rd, inv_start_rd, reflected_rd);
@@ -91,14 +97,14 @@ void recursive_trace(Ray& startRay, Object* startObj, std::vector<Object*>& list
         else
             get_reflected(normal_rd, inv_start_rd, reflected_rd);
         
-        Ray reflected_ray(rayPoint, reflected_rd);
+        Ray reflected_ray(Point(rayPoint.pt+1e-5*reflected_rd), reflected_rd);
         // printf("Reflection\n");
         recursive_trace(reflected_ray, objmin, list_obj, list_light_src, depth+1, bk_plane, reflected_component);
         // printf("Reflected Component: %f, %f, %f\n",reflected_component.rgb[0],reflected_component.rgb[1],reflected_component.rgb[2]);
     }
     if(objmin->transparency > 0){
         double mu_rel = objmin->mu;
-        if(check_inside > 0){
+        if(check_inside > eps){            
             normal_rd = -1.0 * normal_rd;
             mu_rel = (1.0/mu_rel);
         }
@@ -106,15 +112,18 @@ void recursive_trace(Ray& startRay, Object* startObj, std::vector<Object*>& list
         bool chk_TIR = get_refracted(normal_rd, startRay.rd, mu_rel, refracted_rd);
         // Check for total internal reflection!
         if(!chk_TIR){
-            Ray refracted_ray(rayPoint, refracted_rd);
+            Ray refracted_ray(Point(rayPoint.pt+1e-5*refracted_rd), refracted_rd);
             // printf("Refraction\n");
             recursive_trace(refracted_ray, objmin, list_obj, list_light_src, depth+1, bk_plane, refracted_component);
         }
         
     }
+
+    // if(check_inside > eps)
+    //     printf("Refract inside, transparancy =  %f, mu = %f\n", objmin->transparency, objmin->mu);
     // printf("Ip Component: %f, %f, %f\n",Ip.rgb[0],Ip.rgb[1],Ip.rgb[2]);
     // printf("Reflected Component: %f, %f, %f\n",reflected_component.rgb[0],reflected_component.rgb[1],reflected_component.rgb[2]);
-    // printf("Refracted Component: %f, %f, %f\n",refracted_component.rgb[0],refracted_component.rgb[1],refracted_component.rgb[2]);
+    // printf("Refracted Component: %f, %f, %f\n\n",refracted_component.rgb[0],refracted_component.rgb[1],refracted_component.rgb[2]);
     clr = Ip + reflected_component * objmin->reflectivity + refracted_component * refract_coeff;
     // printf("Clr: %f, %f, %f\n",clr.rgb[0],clr.rgb[1],clr.rgb[2]);
 }
@@ -124,6 +133,7 @@ void cast_rays(Point& cam_vcs, Point& cam_wcs, Eigen::Matrix3d& vcs_mat, Object*
     for (int i = 0; i < X; ++i){
         for (int j = 0; j < Y; ++j){
             if(i == 0 && j == 0) std::cout << "Starting Raytracing\n";
+            // printf("<%d %d>\n", i, j);
             Color pixVal;            
             double x_cord = i - 0.5 * (1 - 1.0/n) - X/2;
             for (int k1 = 0; k1 < n; ++k1){

@@ -18,7 +18,7 @@ public:
     Object();
 
     virtual bool intersect(Ray& r, double& t) = 0;          // Writes the t to a passed variable
-    virtual void get_normal(Point& p, Ray& r) = 0;
+    virtual bool get_normal(Point& p, Ray& r) = 0;
 };
 
 #endif

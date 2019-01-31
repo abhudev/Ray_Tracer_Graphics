@@ -10,7 +10,7 @@ public:
     Quadric(const Eigen::Matrix4d& m);
 
     virtual bool intersect(Ray& r, double& t) override;
-    virtual void get_normal(Point& p, Ray& r) override;
+    virtual bool get_normal(Point& p, Ray& r) override;
 
 private:
     Eigen::Matrix4d mat;

@@ -17,7 +17,7 @@ public:
     Color& get_color();
 
     virtual bool intersect(Ray& r, double& t) override;
-    virtual void get_normal(Point& p, Ray& r) override;
+    virtual bool get_normal(Point& p, Ray& r) override;
 
 private:
     Point pt;                       // Point on the plane

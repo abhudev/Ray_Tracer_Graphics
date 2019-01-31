@@ -25,7 +25,7 @@ void light_src_interaction(Point& startPoint, Object* objcur, std::vector<Object
     for(auto lt_src : light_sources){
         Ray shadow_ray(startPoint, lt_src.loc - startPoint);
         shadow_ray.rd.normalize();
-        Ray shadow_ray_bias(Point(startPoint.pt + bias*shadow_ray.rd), shadow_ray.rd);
+        Ray shadow_ray_bias(Point(startPoint.pt + 1e-3*shadow_ray.rd), shadow_ray.rd);
         double t_src = shadow_ray_bias.get_t(lt_src.loc);
         // printf("T_SRC: %f, LIGHT_SRC: [%f, %f, %f]\n", t_src, lt_src.loc.pt[0], lt_src.loc.pt[1], lt_src.loc.pt[2]);
         // printf("Shadow ray: r0: [%f, %f, %f], rd: [%f, %f, %f]\n", shadow_ray_bias.ro.pt[0], shadow_ray_bias.ro.pt[1], shadow_ray_bias.ro.pt[2], shadow_ray_bias.rd[0], shadow_ray_bias.rd[1], shadow_ray_bias.rd[2]);
@@ -37,7 +37,7 @@ void light_src_interaction(Point& startPoint, Object* objcur, std::vector<Object
             obj->intersect(shadow_ray_bias, t);
             // TODO - epsilon
             if(t > eps && t < t_src){
-                // printf("T_SHADOW: %f\n", t);
+                // if(objcur == list_obj[4]) printf("T_SHADOW: %f\n", t);
                 shadow = true;
                 break;
             }
@@ -46,26 +46,30 @@ void light_src_interaction(Point& startPoint, Object* objcur, std::vector<Object
             // printf("NO SHADOW!!\n");
             Ray obj_normal;
             // printf("Point: [%f, %f, %f]\n", startPoint.pt[0], startPoint.pt[1], startPoint.pt[2]);
-            objcur->get_normal(startPoint,obj_normal);
-            Eigen::Vector3d normal_rd(obj_normal.rd), reflected_rd;
-            shadow_ray.rd.normalize();
-            get_reflected(normal_rd, shadow_ray.rd, reflected_rd);
-            // Should we normalize reflected_rd or not?
-            reflected_rd.normalize();
-            // printf("Normal: (%f, %f, %f)\n", normal_rd[0], normal_rd[1], normal_rd[2]);
-            // printf("Shadow: (%f, %f, %f)\n", shadow_ray.rd[0], shadow_ray.rd[1], shadow_ray.rd[2]);
-            double diffuse_cos = get_diffuse(normal_rd, shadow_ray.rd);
-            Color diffuse_val(lt_src.il * diffuse_cos);
-            Eigen::Vector3d inv_cast_rd = -1.0*cast_rd;
-            // printf("Reflected: (%f, %f, %f)\n", reflected_rd[0], reflected_rd[1], reflected_rd[2]);
-            // printf("Inv_cast: (%f, %f, %f)\n", inv_cast_rd[0], inv_cast_rd[1], inv_cast_rd[2]);
-            double specular_cos = get_specular(reflected_rd, inv_cast_rd, objcur->s_exp);
-            if(diffuse_cos <= 0) specular_cos = 0;
-            Color specular_val(lt_src.il * specular_cos);
-            // Color specular_val;
+            bool check_normal = objcur->get_normal(startPoint,obj_normal);
+            if(check_normal)
+            {
+                // printf("YES NORMAL!!\n");
+                Eigen::Vector3d normal_rd(obj_normal.rd), reflected_rd;
+                shadow_ray.rd.normalize();
+                get_reflected(normal_rd, shadow_ray.rd, reflected_rd);
+                // Should we normalize reflected_rd or not?
+                reflected_rd.normalize();
+                // printf("Normal: (%f, %f, %f)\n", normal_rd[0], normal_rd[1], normal_rd[2]);
+                // printf("Shadow: (%f, %f, %f)\n", shadow_ray.rd[0], shadow_ray.rd[1], shadow_ray.rd[2]);
+                double diffuse_cos = get_diffuse(normal_rd, shadow_ray.rd);
+                Color diffuse_val(lt_src.il * diffuse_cos);
+                Eigen::Vector3d inv_cast_rd = -1.0*cast_rd;
+                // printf("Reflected: (%f, %f, %f)\n", reflected_rd[0], reflected_rd[1], reflected_rd[2]);
+                // printf("Inv_cast: (%f, %f, %f)\n", inv_cast_rd[0], inv_cast_rd[1], inv_cast_rd[2]);
+                double specular_cos = get_specular(reflected_rd, inv_cast_rd, objcur->s_exp);
+                if(diffuse_cos <= 0) specular_cos = 0;
+                Color specular_val(lt_src.il * specular_cos);
+                // Color specular_val;
 
-            total_diffuse_val = total_diffuse_val + diffuse_val;
-            total_specular_val = total_specular_val + specular_val;
+                total_diffuse_val = total_diffuse_val + diffuse_val;
+                total_specular_val = total_specular_val + specular_val;
+            }            
         }
     }
 

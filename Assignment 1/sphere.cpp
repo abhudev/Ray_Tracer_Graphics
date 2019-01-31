@@ -17,11 +17,13 @@ bool Sphere::intersect(Ray& r, double& t){
     return true;
 }
 
-void Sphere::get_normal(Point& p, Ray& r){
+bool Sphere::get_normal(Point& p, Ray& r){
     if(abs((p-center).norm() - radius) > eps){
-        printf("p: %f, %f, %f\n",p.pt[0],p.pt[1],p.pt[2]);
-        printf("c: %f, %f, %f | r: %f\n",center.pt[0],center.pt[1],center.pt[2],radius);
-        throw std::runtime_error("Point not on sphere");
+        // printf("p: %f, %f, %f\n",p.pt[0],p.pt[1],p.pt[2]);
+        // printf("c: %f, %f, %f | r: %f\n",center.pt[0],center.pt[1],center.pt[2],radius);
+        // throw std::runtime_error("Point not on sphere");
+        return false;
     }
     r = Ray(p,(p-center).normalized());
+    return true;
 }
