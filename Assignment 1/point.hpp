@@ -1,26 +1,27 @@
 #ifndef __Point__
 #define __Point__
 
-#include <Eigen/Dense>
-#include <vector>
+#include "global.hpp"
 
 // Note - This class is defined just to differentiate between vector and point
 
 class Point{
 public:
-    Eigen::Vector3d pt;
+    vec3d pt;
 
     Point();
     Point(const double a, const double b, const double c);
-    Point(const Eigen::Vector3d& v);
+    Point(const vec3d& v);
     Point(const Point& p);
 
-    Eigen::Vector3d operator- (const Point& p) const;
+    vec3d operator- (const Point& p) const;
     double distance(Point& p);
+    void print();
+    const char* toString();
 };
 
-inline Eigen::Vector3d Point::operator- (const Point& p) const{
-    return Eigen::Vector3d(pt - p.pt);
+inline vec3d Point::operator- (const Point& p) const{
+    return vec3d(pt - p.pt);
 }
 
 #endif

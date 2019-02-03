@@ -1,6 +1,7 @@
 #ifndef __PLANE__
 #define __PLANE__
 
+#include "global.hpp"
 #include "point.hpp"
 #include "ray.hpp"
 #include "object.hpp"
@@ -8,21 +9,24 @@
 
 class Plane : public Object{
 public:
+    int id;
+
     Plane();
     Plane(const Ray& r);
-    Plane(const Point& p, const Eigen::Vector3d& v);
+    Plane(const Point& p, const vec3d& v);
     Plane(const Ray& r, const Color& c);
-    Plane(const Point& p, const Eigen::Vector3d& v, const Color& c);
+    Plane(const Point& p, const vec3d& v, const Color& c);
 
     Color& get_color();
 
     virtual bool intersect(Ray& r, double& t) override;
     virtual bool get_normal(Point& p, Ray& r) override;
+    virtual void print() override;
 
 private:
     Point pt;                       // Point on the plane
     double dist;                    // Distance from origin
-    Eigen::Vector3d normal;         // Normal
+    vec3d normal;                   // Normal
     Color clr;                      // Color - Only used for Back Plane
 };
 

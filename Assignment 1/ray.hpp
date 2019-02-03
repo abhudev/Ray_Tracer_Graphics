@@ -7,14 +7,15 @@
 class Ray{
 public:
     Point ro;                       // Ray Origin
-    Eigen::Vector3d rd;             // Ray Direction
+    vec3d rd;                       // Ray Direction
 
     Ray();
-    Ray(const Point& p, const Eigen::Vector3d& d);
+    Ray(const Point& p, const vec3d& d);
     Ray& operator= (const Ray& r);
 
     Point get_pt(double t);
     double get_t(Point& p);
+    void print();
 };
 
 inline Ray& Ray::operator= (const Ray& r){

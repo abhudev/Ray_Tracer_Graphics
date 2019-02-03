@@ -2,16 +2,26 @@
 #define __GLOBAL__
 
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
-#include <omp.h>
+#include <vector>
+
 #include <Eigen/Dense>
 
-const int MAX_TRACE_DEPTH = 5;
+typedef Eigen::Vector3d vec3d;
+typedef Eigen::Vector4d vec4d;
+typedef Eigen::Matrix3d mat3d;
+typedef Eigen::Matrix4d mat4d;
+
+extern bool debug;
+extern int max_trace_depth;
+extern int obj_count;
+extern vec3d global_Ia;
+
 const double eps = 1e-6;
 const double bias = 1e-4;
-const Eigen::Vector3d zero_vec(0,0,0);
-const Eigen::Vector3d eps_vec(eps,eps,eps);
 
-const Eigen::Vector3d global_Ia(128,128,128);
+const char* toString(vec3d v);
+void writePPM(std::string filename, std::vector<Eigen::MatrixXd>& img);
 
 #endif

@@ -1,15 +1,15 @@
 #ifndef __COLOR__
 #define __COLOR__
 
-#include <Eigen/Dense>
+#include "global.hpp"
 
 class Color{
 public:
-    Eigen::Vector3d rgb;
+    vec3d rgb;
 
     Color();
     Color(const double a, const double b, const double c);
-    Color(const Eigen::Vector3d& c);
+    Color(const vec3d& c);
     Color(const Color& c);
 
     Color operator+ (const Color& c) const;
