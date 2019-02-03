@@ -94,6 +94,7 @@ void recursive_trace(Ray& startRay, Object* startObj, std::vector<Object*>& list
 }
 
 void cast_rays(Scene& scn, int width, int height, int n, std::vector<Eigen::MatrixXd>& img){
+	if(debug) omp_set_num_threads(1);
     #pragma omp parallel for
     for (int i = 0; i < width; ++i){
         for (int j = 0; j < height; ++j){
