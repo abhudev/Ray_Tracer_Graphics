@@ -14,6 +14,6 @@ bool Camera::get_normal(Point& p, Ray& r){
 
 void Camera::print(){
     printf("Type - Camera\n");
-    printf("loc: %s\n",pt.toString());
-    printf("look_at: %s\n",toString(look_at));
+    printf("loc: %s\n",pt.toString().c_str());
+    printf("look_at: %s\n",toString(look_at).c_str());
 }

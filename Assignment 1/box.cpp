@@ -53,7 +53,7 @@ bool Box::get_normal(Point& p, Ray& r){
     for(int i=0;i<6;i++) s += on[i];
     if(s < 1){
         if(debug){
-            printf("p: %s\n",p.toString());
+            printf("p: %s\n",p.toString().c_str());
             print();
             throw std::runtime_error("Point inside/outside the Box");
         }
@@ -61,7 +61,7 @@ bool Box::get_normal(Point& p, Ray& r){
     }
     else if(s > 1){
         if(debug){
-            printf("p: %s\n",p.toString());
+            printf("p: %s\n",p.toString().c_str());
             print();
             throw std::runtime_error("Point on the edge/corner");
         }
@@ -74,7 +74,7 @@ bool Box::get_normal(Point& p, Ray& r){
 void Box::print(){
     printf("ID - %d | Type - Box\n",id);
     printf("Verices - \n");
-    for(int i=0;i<8;++i) printf("%s\n",vertices[i].toString());
+    for(int i=0;i<8;++i) printf("%s\n",vertices[i].toString().c_str());
     printf("Faces - \n");
     for(int i=0;i<6;++i) faces[i].print();
 }

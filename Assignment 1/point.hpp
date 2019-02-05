@@ -17,7 +17,7 @@ public:
     vec3d operator- (const Point& p) const;
     double distance(Point& p);
     void print();
-    const char* toString();
+    std::string toString();
 };
 
 inline vec3d Point::operator- (const Point& p) const{

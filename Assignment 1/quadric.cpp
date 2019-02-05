@@ -37,7 +37,7 @@ bool Quadric::get_normal(Point& p, Ray& r){
     vec4d prod = mat * p_homo;
     if(abs(p_homo.dot(prod)) > eps){
         if(debug){
-            printf("p: %s\n",p.toString());
+            printf("p: %s\n",p.toString().c_str());
             print();
             throw std::runtime_error("Point not on the quadric");
         }

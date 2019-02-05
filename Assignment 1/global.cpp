@@ -5,10 +5,10 @@ int max_trace_depth = 5;
 int obj_count = 0;
 vec3d global_Ia = vec3d(128,128,128);
 
-const char* toString(vec3d v){
+std::string toString(vec3d v){
     std::stringstream ss;
     ss << "[" << v[0] << ", " << v[1] << ", " << v[2] << "]";
-    return ss.str().c_str();
+    return ss.str();
 }
 
 void writePPM(std::string filename, std::vector<Eigen::MatrixXd>& img){

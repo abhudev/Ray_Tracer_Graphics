@@ -19,7 +19,7 @@ bool Sphere::intersect(Ray& r, double& t){
 bool Sphere::get_normal(Point& p, Ray& r){
     if(abs((p-center).norm() - radius) > eps){
         if(debug){
-            printf("p: %s\n",p.toString());
+            printf("p: %s\n",p.toString().c_str());
             print();
             throw std::runtime_error("Point not on sphere");
         }
@@ -32,5 +32,5 @@ bool Sphere::get_normal(Point& p, Ray& r){
 void Sphere::print(){
     printf("ID - %d | Type - Sphere\n",id);
     printf("radius: %f\n",radius);
-    printf("center: %s\n",center.toString());
+    printf("center: %s\n",center.toString().c_str());
 }

@@ -21,7 +21,7 @@ extern vec3d global_Ia;
 const double eps = 1e-6;
 const double bias = 1e-4;
 
-const char* toString(vec3d v);
+std::string toString(vec3d v);
 void writePPM(std::string filename, std::vector<Eigen::MatrixXd>& img);
 
 #endif

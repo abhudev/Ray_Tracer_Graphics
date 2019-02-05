@@ -24,7 +24,7 @@ bool Polygon::intersect(Ray& r, double& t){
 bool Polygon::contained(Point& p){
     if(abs(normal.dot(vertices[0] - p)) > eps) {
         if(debug){
-            printf("p: %s\n",p.toString());
+            printf("p: %s\n",p.toString().c_str());
             print();
             throw std::runtime_error("Point not on the plane of polygon");
         }
@@ -69,7 +69,7 @@ bool Polygon::contained(Point& p){
 bool Polygon::get_normal(Point& p, Ray& r){
     if(!contained(p)){
         if(debug){
-            printf("p: %s\n",p.toString());
+            printf("p: %s\n",p.toString().c_str());
             print();
             throw std::runtime_error("Point not inside the polygon");
         }
@@ -85,8 +85,8 @@ vec3d Polygon::get_this_normal(){
 
 void Polygon::print(){
     printf("ID - %d | Type - Polygon\n",id);
-    printf("n: %s\n",toString(normal));
+    printf("n: %s\n",toString(normal).c_str());
     printf("d: %f\n",dist);
     printf("Points - \n");
-    for(uint i=0;i<vertices.size();++i) printf("%s\n",vertices[i].toString());
+    for(uint i=0;i<vertices.size();++i) printf("%s\n",vertices[i].toString().c_str());
 }

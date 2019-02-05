@@ -35,7 +35,7 @@ bool Plane::intersect(Ray& r, double& t){
 bool Plane::get_normal(Point& p, Ray& r){
     if(abs(normal.dot(p-pt)) > eps){
         if(debug){
-            printf("p: %s\n",p.toString());
+            printf("p: %s\n",p.toString().c_str());
             print();
             throw std::runtime_error("Point not on the plane");
         }
@@ -47,7 +47,7 @@ bool Plane::get_normal(Point& p, Ray& r){
 
 void Plane::print(){
     printf("ID - %d | Type - Plane\n",id);
-    printf("pt: %s\n",pt.toString());
-    printf("n: %s\n",toString(normal));
+    printf("pt: %s\n",pt.toString().c_str());
+    printf("n: %s\n",toString(normal).c_str());
     printf("d: %f\n",dist);
 }

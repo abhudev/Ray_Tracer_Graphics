@@ -16,8 +16,8 @@ void Point::print(){
     printf("Point: <%f, %f, %f>\n",pt[0],pt[1],pt[2]);
 }
 
-const char* Point::toString(){
+std::string Point::toString(){
     std::stringstream ss;
     ss << "<" << pt[0] << ", " << pt[1] << ", " << pt[2] << ">";
-    return ss.str().c_str();
+    return ss.str();
 }
