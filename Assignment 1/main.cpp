@@ -33,7 +33,7 @@ int main(int argc, char **argv){
     int width = result["w"].as<int>(), height = result["h"].as<int>(), n = result["n"].as<int>();
     printf("Width = %d, Height = %d, n = %d, Max Depth=%d\n", width, height, n, max_trace_depth);
     
-    std::vector<Eigen::MatrixXd> img(3,Eigen::MatrixXd(width,height));
+    std::vector<Eigen::MatrixXd> img(3,Eigen::MatrixXd(height,width));
         
     cast_rays(scn, width, height, n, img);
     printf("Raytracing Done\n");

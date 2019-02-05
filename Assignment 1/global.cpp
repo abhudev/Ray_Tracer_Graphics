@@ -14,9 +14,9 @@ const char* toString(vec3d v){
 void writePPM(std::string filename, std::vector<Eigen::MatrixXd>& img){
     int height = img[0].rows(), width = img[0].cols();
     std::ofstream ofs(filename, std::ios::out | std::ios::binary);
-    ofs << "P6\n" << height << " " << width << "\n255\n";
-    for (int i = 0; i < width; ++i) {
-        for(int j = 0; j < height; ++j){
+    ofs << "P6\n" << width << " " << height << "\n255\n";
+    for (int i = 0; i < height; ++i) {
+        for(int j = 0; j < width; ++j){
             ofs << (unsigned char)(std::min(double(255), img[0](i, j))) << (unsigned char)(std::min(double(255), img[1](i, j))) << (unsigned char)(std::min(double(255), img[2](i, j)));
         }
     }

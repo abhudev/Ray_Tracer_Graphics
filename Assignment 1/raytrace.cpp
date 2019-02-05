@@ -96,13 +96,13 @@ void recursive_trace(Ray& startRay, Object* startObj, std::vector<Object*>& list
 void cast_rays(Scene& scn, int width, int height, int n, std::vector<Eigen::MatrixXd>& img){
 	if(debug) omp_set_num_threads(1);
     #pragma omp parallel for
-    for (int i = 0; i < width; ++i){
-        for (int j = 0; j < height; ++j){
+    for (int i = 0; i < height; ++i){
+        for (int j = 0; j < width; ++j){
             if(i == 0 && j == 0) printf("Starting Raytracing\n");
             Color pixVal;
-            double x_cord = i - 0.5 * (1 - 1.0/n) - width/2;
+            double x_cord = i - 0.5 * (1 - 1.0/n) - height/2;
             for (int k1 = 0; k1 < n; ++k1){
-                double y_cord = j - 0.5 * (1 - 1.0/n) - height/2;
+                double y_cord = j - 0.5 * (1 - 1.0/n) - width/2;
                 for (int k2 = 0; k2 < n; ++k2){                    
                     Point pixPoint(x_cord, y_cord, 0);                  // Point on the View plane
                     vec3d dir = pixPoint.pt - scn.cam.pt.pt;
