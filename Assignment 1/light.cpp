@@ -25,21 +25,22 @@ void light_src_interaction(Point& startPoint, Object* objcur, std::vector<Object
         shadow_ray.rd.normalize();
         Ray shadow_ray_bias(Point(startPoint.pt + 1e-3*shadow_ray.rd), shadow_ray.rd);
         double t_src = shadow_ray_bias.get_t(lt_src.loc);
-        bool shadow = false;
+        volatile bool shadow = false;
 
-        // :: Check shadow object ::
-        for(auto obj : list_obj){
-            double t;
-            obj->intersect(shadow_ray_bias, t);
-            if(t > eps && t < t_src){
+        // :: Check shadow object ::        
+        for(auto obj : list_obj){            
+            double t = -10;            
+            obj->intersect(shadow_ray_bias, t);            
+            if(t > eps && t < t_src){                
                 shadow = true;
                 break;
             }
         }
-        if(!shadow){
+        // printf("Shadow: %d\n", shadow);
+        if(shadow == false){
             Ray obj_normal;
             bool check_normal = objcur->get_normal(startPoint,obj_normal);
-            if(check_normal){
+            if(check_normal == true){
                 vec3d normal_rd(obj_normal.rd), reflected_rd;
                 shadow_ray.rd.normalize();
                 get_reflected(normal_rd, shadow_ray.rd, reflected_rd);
