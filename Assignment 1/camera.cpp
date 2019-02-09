@@ -4,12 +4,12 @@ Camera::Camera() : pt(), look_at() {}
 
 Camera::Camera(const Point& p, const vec3d l) : pt(p), look_at(l) {}
 
-bool Camera::intersect(Ray& r, double& t){
-    throw std::runtime_error("Camera object does not implement intersect");
+bool Camera::internal_intersect(Ray& r, double& t){
+    throw std::runtime_error("Camera object does not implement internal_intersect");
 }
 
-bool Camera::get_normal(Point& p, Ray& r){
-    throw std::runtime_error("Camera object does not implement get_normal");
+bool Camera::internal_get_normal(Point& p, Ray& r){
+    throw std::runtime_error("Camera object does not implement internal_get_normal");
 }
 
 void Camera::print(){

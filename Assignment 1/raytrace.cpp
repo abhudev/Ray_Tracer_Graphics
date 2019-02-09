@@ -23,7 +23,7 @@ void recursive_trace(Ray& startRay, Object* startObj, std::vector<Object*>& list
     double tmin = std::numeric_limits<double>::infinity();
     startRay.rd.normalize();
     
-    Object* objmin = shootRay(startRay, startObj, list_obj, tmin);
+    Object* objmin = shootRay(startRay, startObj, list_obj, tmin);    
 
     if(!(tmin < std::numeric_limits<double>::infinity())){
         clr = Color(0,0,0);
@@ -31,48 +31,45 @@ void recursive_trace(Ray& startRay, Object* startObj, std::vector<Object*>& list
     }
     
     if(objmin == &bk_plane){
-        clr = bk_plane.get_color();
+        clr = bk_plane.get_color();        
         return;
     }
     Point rayPoint = startRay.get_pt(tmin);
 
     // :: Phong illumination model ::    
-    Color Ip;
-    light_src_interaction(rayPoint, objmin, list_obj, list_light_src, startRay.rd, bk_plane, Ip);
-
-    if(depth >= max_trace_depth){
-        clr = Ip;
-        return;
-    }
-
-    Color reflected_component, refracted_component;
-    
     Ray normal_ray;
-    bool check_normal = objmin->get_normal(rayPoint,normal_ray);
-    if(!check_normal)
-    {
+    bool check_normal = objmin->get_normal(rayPoint,normal_ray);    
+    vec3d normal_rd = normal_ray.rd;
+    
+    Color Ip;
+    light_src_interaction(rayPoint, objmin, list_obj, list_light_src, startRay.rd, bk_plane, Ip, check_normal, normal_ray);
+
+    if(depth >= max_trace_depth || !check_normal){
         clr = Ip;
         return;
     }
-    vec3d normal_rd = normal_ray.rd;
+
+    Color reflected_component, refracted_component;    
 
     double refract_coeff = objmin->transparency;    
-    double check_inside = normal_rd.dot(startRay.rd);
-
+    double check_inside = normal_rd.dot(startRay.rd);    
     if(check_inside > eps)
+    {        
         refract_coeff = 1;
+    }
 
     // Reflection
     if(objmin->reflectivity > 0){
         vec3d reflected_rd, inv_start_rd;
+        startRay.rd.normalize();
         inv_start_rd = -1.0*startRay.rd;
         if(check_inside > eps){
             vec3d inv_normal_rd = -1.0*normal_rd;
             get_reflected(inv_normal_rd, inv_start_rd, reflected_rd);
         }
         else get_reflected(normal_rd, inv_start_rd, reflected_rd);
-        
-        Ray reflected_ray(Point(rayPoint.pt+1e-5*reflected_rd), reflected_rd);
+                
+        Ray reflected_ray(Point(rayPoint.pt+1e-5*reflected_rd), reflected_rd);        
         recursive_trace(reflected_ray, objmin, list_obj, list_light_src, depth+1, bk_plane, reflected_component);
     }
     if(objmin->transparency > 0){
@@ -85,7 +82,7 @@ void recursive_trace(Ray& startRay, Object* startObj, std::vector<Object*>& list
         bool chk_TIR = get_refracted(normal_rd, startRay.rd, mu_rel, refracted_rd);
         // Check for total internal reflection
         if(!chk_TIR){
-            Ray refracted_ray(Point(rayPoint.pt+1e-5*refracted_rd), refracted_rd);
+            Ray refracted_ray(Point(rayPoint.pt+1e-5*refracted_rd), refracted_rd);            
             recursive_trace(refracted_ray, objmin, list_obj, list_light_src, depth+1, bk_plane, refracted_component);
         }
         
@@ -95,10 +92,13 @@ void recursive_trace(Ray& startRay, Object* startObj, std::vector<Object*>& list
 
 void cast_rays(Scene& scn, int width, int height, int n, std::vector<Eigen::MatrixXd>& img){
 	if(debug) omp_set_num_threads(1);
+    
+    printf("Starting Raytracing\n");
+    
     #pragma omp parallel for
     for (int i = 0; i < height; ++i){
         for (int j = 0; j < width; ++j){
-            if(i == 0 && j == 0) printf("Starting Raytracing\n");
+            
             Color pixVal;
             double x_cord = i - 0.5 * (1 - 1.0/n) - height/2;
             for (int k1 = 0; k1 < n; ++k1){

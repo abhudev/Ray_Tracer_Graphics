@@ -13,9 +13,9 @@ public:
 
     // p1 (a) - p2 (b) : Length; p1 (b) - p3 (d) : Breadth; p1 (a) - p4 (e) : Height
     Box(const Point& p1, const Point& p2, const Point& p3, const Point& p4);
-
-    virtual bool intersect(Ray& r, double& t) override;
-    virtual bool get_normal(Point& p, Ray& r) override;
+    
+    virtual bool internal_intersect(Ray& r, double& t) override;
+    virtual bool internal_get_normal(Point& p, Ray& r) override;
     virtual void print() override;
 
 private:

@@ -3,7 +3,7 @@
 
 Quadric::Quadric(const mat4d& m): Object(), id(obj_count++), mat(m) {}
 
-bool Quadric::intersect(Ray& r, double& t){
+bool Quadric::internal_intersect(Ray& r, double& t){
     vec4d p(r.ro.pt[0],r.ro.pt[1],r.ro.pt[2],1);
     vec4d d(r.rd[0],r.rd[1],r.rd[2],0);             // Important - Direction has 0 as homogenous coordinate
     double a = d.dot(mat * d);
@@ -30,7 +30,7 @@ bool Quadric::intersect(Ray& r, double& t){
     return true;
 }
 
-bool Quadric::get_normal(Point& p, Ray& r){
+bool Quadric::internal_get_normal(Point& p, Ray& r){
     vec4d p_homo(p.pt[0],p.pt[1],p.pt[2],1);
     vec3d n_dir(0,0,0);
 

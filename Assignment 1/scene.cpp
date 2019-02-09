@@ -92,6 +92,26 @@ void Scene::placeObjects(json& j_obj){
         if(!jcurr["kd"].empty()) objs.back()->kd = vec3d(jcurr["kd"][0],jcurr["kd"][1],jcurr["kd"][2]);
         if(!jcurr["ks"].empty()) objs.back()->ks = vec3d(jcurr["ks"][0],jcurr["ks"][1],jcurr["ks"][2]);
         if(!jcurr["ka"].empty()) objs.back()->ka = vec3d(jcurr["ka"][0],jcurr["ka"][1],jcurr["ka"][2]);
+
+        // :: Define object transformation properties
+        // Design decision - do not activate transform until we have at least a matrix
+        if(!jcurr["d0"].empty()) objs.back()->d0 = vec3d(jcurr["d0"][0], jcurr["d0"][1], jcurr["d0"][2]);
+        if(!jcurr["M"].empty()) {            
+            json j_mat = jcurr["M"];
+            objs.back()->M << j_mat[0], j_mat[1], j_mat[2], 
+                              j_mat[3], j_mat[4], j_mat[5],
+                              j_mat[6], j_mat[7], j_mat[8];
+            objs.back()->Minv = objs.back()->M.inverse();
+            objs.back()->MT = objs.back()->M.transpose();
+            objs.back()->MTinv = objs.back()->Minv.transpose();
+            // std::cout<<"M\n";
+            // std::cout<<objs.back()->M;
+            // std::cout<<"Minv\n";
+            // std::cout<<objs.back()->Minv;
+            // std::cout<<"MT\n";
+            // std::cout<<objs.back()->MT;
+            objs.back()->transform = true;            
+        }
     }
 }
 

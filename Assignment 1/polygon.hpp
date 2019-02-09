@@ -11,8 +11,8 @@ public:
     int id;
     Polygon(std::vector<Point>& pts);       // Polygon edges are assumed between consecutive vertices
 
-    virtual bool intersect(Ray& r, double& t) override;
-    virtual bool get_normal(Point& p, Ray& r) override;
+    virtual bool internal_intersect(Ray& r, double& t) override;
+    virtual bool internal_get_normal(Point& p, Ray& r) override;
     virtual void print() override;
     
     bool contained(Point& p);

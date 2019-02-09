@@ -9,7 +9,7 @@ Polygon::Polygon(std::vector<Point>& pts): Object(), id(obj_count++), vertices(p
     dist = -1.0*vertices[0].pt.dot(normal);
 }
 
-bool Polygon::intersect(Ray& r, double& t){
+bool Polygon::internal_intersect(Ray& r, double& t){
     double vd = normal.dot(r.rd);
     if(abs(vd) < eps) return false;
 
@@ -34,7 +34,7 @@ bool Polygon::contained(Point& p){
     bool not_valid = true;
     vec3d zero_vec(0,0,0), dir;
     int cc_i = 0;
-    while(not_valid){
+    while(not_valid){        
         Point some_pt(rand()%100,rand()%100,rand()%100);
         vec3d projected_pt = some_pt.pt - (some_pt.pt - p.pt).dot(normal) * normal;
         dir = (projected_pt - p.pt).normalized();
@@ -66,7 +66,7 @@ bool Polygon::contained(Point& p){
     return count%2 == 1;
 }
 
-bool Polygon::get_normal(Point& p, Ray& r){
+bool Polygon::internal_get_normal(Point& p, Ray& r){
     if(!contained(p)){
         if(debug){
             printf("p: %s\n",p.toString().c_str());

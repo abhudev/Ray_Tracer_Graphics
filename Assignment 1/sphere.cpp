@@ -2,10 +2,12 @@
 
 Sphere::Sphere(const Point& p, const float r) : Object(), id(obj_count++), center(p), radius(r) {}
 
-bool Sphere::intersect(Ray& r, double& t){
-    r.rd.normalize();
+bool Sphere::internal_intersect(Ray& r, double& t){
+    double rdnorm = r.rd.norm();
+    vec3d normed_rd = r.rd/rdnorm;
+    // r.rd.normalize();
     vec3d l = center - r.ro;
-    double tca = l.dot(r.rd);
+    double tca = l.dot(normed_rd);
     if(tca < 0) return false;
     
     double d = l.squaredNorm() - tca*tca;
@@ -13,10 +15,11 @@ bool Sphere::intersect(Ray& r, double& t){
     
     double thc = sqrt(radius*radius - d);    
     t = tca < thc ? tca + thc : tca - thc;
+    t /= rdnorm;
     return true;
 }
 
-bool Sphere::get_normal(Point& p, Ray& r){
+bool Sphere::internal_get_normal(Point& p, Ray& r){
     if(abs((p-center).norm() - radius) > eps){
         if(debug){
             printf("p: %s\n",p.toString().c_str());

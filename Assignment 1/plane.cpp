@@ -22,7 +22,7 @@ Plane::Plane(const Point& p, const vec3d& v, const Color& c): Object(), id(obj_c
     dist = -1*normal.dot(p.pt);
 }
 
-bool Plane::intersect(Ray& r, double& t){
+bool Plane::internal_intersect(Ray& r, double& t){
     double vd = normal.dot(r.rd);
     if(vd == 0) return false;
 
@@ -32,7 +32,7 @@ bool Plane::intersect(Ray& r, double& t){
     return true;
 }
 
-bool Plane::get_normal(Point& p, Ray& r){
+bool Plane::internal_get_normal(Point& p, Ray& r){
     if(abs(normal.dot(p-pt)) > eps){
         if(debug){
             printf("p: %s\n",p.toString().c_str());

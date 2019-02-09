@@ -19,8 +19,8 @@ public:
 
     Color& get_color();
 
-    virtual bool intersect(Ray& r, double& t) override;
-    virtual bool get_normal(Point& p, Ray& r) override;
+    virtual bool internal_intersect(Ray& r, double& t) override;
+    virtual bool internal_get_normal(Point& p, Ray& r) override;
     virtual void print() override;
 
 private:

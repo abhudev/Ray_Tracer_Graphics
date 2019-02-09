@@ -26,12 +26,12 @@ Box::Box(const Point& p1, const Point& p2, const Point& p3, const Point& p4): Ob
     obj_count -= 6;
 }
 
-bool Box::intersect(Ray& R, double& t){
+bool Box::internal_intersect(Ray& R, double& t){
     t = std::numeric_limits<double>::infinity();
     double tmp = t;
     std::vector<double> ts(6);
     for(int i=0;i<6;i++){
-      int chk_face = faces[i].intersect(R,ts[i]);
+      int chk_face = faces[i].internal_intersect(R,ts[i]);
       if(!chk_face) ts[i] = std::numeric_limits<double>::infinity();
     }
     bool hit = false;
@@ -42,15 +42,19 @@ bool Box::intersect(Ray& R, double& t){
     return hit;
 }
 
-bool Box::get_normal(Point& p, Ray& r){
-    std::vector<bool> on(6,false);
+bool Box::internal_get_normal(Point& p, Ray& r){
+    // std::vector<bool> on(6,false);
+    int s = 0;
+    int p_face = -10;
     for(int i=0;i<6;i++){
         if(faces[i].contained(p)){
-            on[i] = true;
+            // on[i] = true;
+            s += 1;
+            p_face = i;
+            break;
         }
     }
-    int s = 0;
-    for(int i=0;i<6;i++) s += on[i];
+        
     if(s < 1){
         if(debug){
             printf("p: %s\n",p.toString().c_str());
@@ -67,7 +71,8 @@ bool Box::get_normal(Point& p, Ray& r){
         }
         return false;
     }
-    for(int i=0;i<6;i++) if(on[i]) r = Ray(p,faces[i].get_this_normal());
+    // for(int i=0;i<6;i++) if(on[i]) r = Ray(p,faces[i].get_this_normal());
+    r = Ray(p,faces[p_face].get_this_normal());
     return true;
 }
 
