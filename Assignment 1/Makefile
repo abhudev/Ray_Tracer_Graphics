@@ -1,20 +1,36 @@
 SRC = .
 TGT = obj
 $(shell mkdir -p $(TGT) >/dev/null)
+DEPDIR = .d
+$(shell mkdir -p $(DEPDIR) >/dev/null)
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
 EXEC = tracer
-CXXFLAGS = -Wall -std=c++11 -O3 -fopenmp
+INCLUDES = -Iinclude
+CXXFLAGS = -Wall -std=c++11 -O3 -fopenmp -g $(INCLUDES)
 SOURCES = $(wildcard $(SRC)/*.cpp)
 HEADERS = $(wildcard $(SRC)/*.hpp)
-# OBJS = $(SOURCES:.cpp=.o)
+DEPFILES = $(wildcard $(DEPDIR)/*.d)
 OBJS = $(addprefix $(TGT)/, $(notdir $(SOURCES:.cpp=.o)))
+POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
 
-$(TGT)/%.o: $(SRC)/%.cpp
-	$(CXX) $(CXXFLAGS) -c $^ -o $@
+all: $(EXEC) $(TGT)/.compiler_flags
 
-$(EXEC): $(OBJS)
-	$(CXX) -o $@ $^ $(CXXFLAGS)
+.PHONY: force
+$(TGT)/.compiler_flags: force
+	echo '$(DEPFLAGS) $(CXXFLAGS)' | cmp -s - $@ || echo '$(CXXFLAGS)' > $@
 
-.PHONY: clean
+$(TGT)/%.o: $(SRC)/%.cpp $(DEPDIR)/%.d $(TGT)/.compiler_flags
+	$(CXX) $(DEPFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(POSTCOMPILE)
+
+$(EXEC): $(OBJS) $(TGT)/.compiler_flags
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $@
+
 clean:
-	rm -rf $(TGT); rm $(EXEC)
+	rm -rf $(TGT); rm -rf .d; rm $(EXEC)
+
+$(DEPDIR)/%.d: ;
+.PRECIOUS: $(DEPDIR)/%.d
+
+-include $(DEPFILES)
