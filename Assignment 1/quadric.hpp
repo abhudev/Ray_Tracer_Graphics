@@ -12,8 +12,9 @@ public:
 
     Quadric(const mat4d& m);
 
-    virtual bool internal_intersect(Ray& r, double& t) override;
-    virtual bool internal_get_normal(Point& p, Ray& r) override;
+    virtual bool internal_intersect(Ray& r, double& t, int& args) override;
+    virtual bool internal_get_normal(Point& p, Ray& r, int& args) override;
+    virtual bool get_mesh(std::ofstream& fout) override;
     virtual void print() override;
 
 private:

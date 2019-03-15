@@ -4,6 +4,7 @@ __pycache__/
 data/
 out/
 obj/
+.d/
 
 tracer
 a.out

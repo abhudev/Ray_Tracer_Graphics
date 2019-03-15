@@ -14,6 +14,13 @@ using json = nlohmann::json;
 #include "quadric.hpp"
 #include "polygon.hpp"
 #include "box.hpp"
+#include "triangle.hpp"
+#include "mesh.hpp"
+
+#include "texture.hpp"
+#include "planar.hpp"
+#include "spherical.hpp"
+#include "cylindrical.hpp"
 
 #include "light.hpp"
 #include "camera.hpp"

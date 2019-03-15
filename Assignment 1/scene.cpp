@@ -80,6 +80,9 @@ void Scene::placeObjects(json& j_obj){
             Point e(jcurr["e"][0],jcurr["e"][1],jcurr["e"][2]);
             objs.push_back(new Box(a,b,d,e));
         }
+        else if(jcurr["name"] == "mesh" || jcurr["name"] == "Mesh"){
+        	objs.push_back(new Mesh(jcurr["file"]));
+        }
         else{
             throw std::runtime_error("Unsupported object " + (std::string)jcurr["name"]);
         }
@@ -96,7 +99,7 @@ void Scene::placeObjects(json& j_obj){
         // :: Define object transformation properties
         // Design decision - do not activate transform until we have at least a matrix
         if(!jcurr["d0"].empty()) objs.back()->d0 = vec3d(jcurr["d0"][0], jcurr["d0"][1], jcurr["d0"][2]);
-        if(!jcurr["M"].empty()) {            
+        if(!jcurr["M"].empty()){            
             json j_mat = jcurr["M"];
             objs.back()->M << j_mat[0], j_mat[1], j_mat[2], 
                               j_mat[3], j_mat[4], j_mat[5],
@@ -110,7 +113,42 @@ void Scene::placeObjects(json& j_obj){
             // std::cout<<objs.back()->Minv;
             // std::cout<<"MT\n";
             // std::cout<<objs.back()->MT;
-            objs.back()->transform = true;            
+            objs.back()->transform = true;
+        }
+        if(!jcurr["texture"].empty()){
+            json jtxt = jcurr["texture"];
+            if(jtxt["type"] == "spherical" || jtxt["type"] == "Spherical"){
+                std::string fname = jtxt["file"];
+                std::vector<Eigen::MatrixXd> img;
+                readPPM(fname,img);
+                Point center(jtxt["center"][0],jtxt["center"][1],jtxt["center"][2]);
+                vec3d x_axis(jtxt["x"][0],jtxt["x"][1],jtxt["x"][2]);
+                vec3d z_axis(jtxt["z"][0],jtxt["z"][1],jtxt["z"][2]);
+                objs.back()->hasTexture = true;
+                objs.back()->txt = new SphericalTexture(img,center,x_axis,z_axis);
+            }
+            else if(jtxt["type"] == "planar" || jtxt["type"] == "Planar"){
+                std::string fname = jtxt["file"];
+                std::vector<Eigen::MatrixXd> img;
+                readPPM(fname,img);
+                vec3d normal(jtxt["z"][0],jtxt["z"][1],jtxt["z"][2]);
+                vec3d x_axis(jtxt["x"][0],jtxt["x"][1],jtxt["x"][2]);
+                objs.back()->hasTexture = true;
+                objs.back()->txt = new PlanarTexture(img,normal,x_axis);
+            }
+            else if(jtxt["type"] == "cylindrical" || jtxt["type"] == "Cylindrical"){
+                std::string fname = jtxt["file"];
+                std::vector<Eigen::MatrixXd> img;
+                readPPM(fname,img);
+                Point center(jtxt["center"][0],jtxt["center"][1],jtxt["center"][2]);
+                vec3d x_axis(jtxt["x"][0],jtxt["x"][1],jtxt["x"][2]);
+                vec3d z_axis(jtxt["z"][0],jtxt["z"][1],jtxt["z"][2]);
+                objs.back()->hasTexture = true;
+                objs.back()->txt = new CylindricalTexture(img,center,x_axis,z_axis);
+            }
+            else{
+                throw std::runtime_error("Unknown texture type");
+            }
         }
     }
 }

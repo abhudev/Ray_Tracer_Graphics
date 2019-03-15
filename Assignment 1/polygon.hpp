@@ -9,14 +9,17 @@
 class Polygon : public Object{
 public:
     int id;
+
     Polygon(std::vector<Point>& pts);       // Polygon edges are assumed between consecutive vertices
 
-    virtual bool internal_intersect(Ray& r, double& t) override;
-    virtual bool internal_get_normal(Point& p, Ray& r) override;
+    virtual bool internal_intersect(Ray& r, double& t, int& args) override;
+    virtual bool internal_get_normal(Point& p, Ray& r, int& args) override;
+    virtual bool get_mesh(std::ofstream& fout) override;
     virtual void print() override;
     
     bool contained(Point& p);
-    vec3d get_this_normal();
+    double get_dist();
+    vec3d get_normal();
 
 private:
     std::vector<Point> vertices;            // List of vertices

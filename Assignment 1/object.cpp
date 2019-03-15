@@ -1,6 +1,8 @@
-	#include "object.hpp"
+#include "object.hpp"
 
 Object::Object() {}
+
+Object::Object(std::string t) : type(t) {}
 
 void Object::printProperties(){
     printf("kd = %s\n",toString(kd).c_str());
@@ -9,7 +11,7 @@ void Object::printProperties(){
     printf("mu = %f | s_exp = %f | reflectivity = %f | transparency = %f\n",mu, s_exp, reflectivity, transparency);
 }
 
-bool Object::intersect(Ray& r, double& t)
+bool Object::intersect(Ray& r, double& t, int& args)
 {
 	Ray r_tmp = r;	
 	double tmp;
@@ -21,13 +23,13 @@ bool Object::intersect(Ray& r, double& t)
 
 	// return internal_intersect(r_tmp, t);
 
-	if(!internal_intersect(r_tmp, tmp)) return false;
+	if(!internal_intersect(r_tmp, tmp, args)) return false;
 	t = tmp;	
 	return true;
 
 }
 
-bool Object::get_normal(Point& p, Ray& r)
+bool Object::get_normal(Point& p, Ray& r, int& args)
 {
 	Point tmp_p(p);
 	
@@ -36,7 +38,7 @@ bool Object::get_normal(Point& p, Ray& r)
 		tmp_p = Point(Minv*(p.pt - d0));
 	}
 
-	if(!internal_get_normal(tmp_p, r)) 
+	if(!internal_get_normal(tmp_p, r, args)) 
 	{		
 		return false;
 	}

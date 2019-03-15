@@ -11,12 +11,16 @@ class Box : public Object{
 public:
     int id;
 
+    Box();
     // p1 (a) - p2 (b) : Length; p1 (b) - p3 (d) : Breadth; p1 (a) - p4 (e) : Height
     Box(const Point& p1, const Point& p2, const Point& p3, const Point& p4);
     
-    virtual bool internal_intersect(Ray& r, double& t) override;
-    virtual bool internal_get_normal(Point& p, Ray& r) override;
+    virtual bool internal_intersect(Ray& r, double& t, int& args) override;
+    virtual bool internal_get_normal(Point& p, Ray& r, int& args) override;
+    virtual bool get_mesh(std::ofstream& fout) override;
     virtual void print() override;
+
+    std::vector<Polygon> get_faces();
 
 private:
     std::vector<Point> vertices;        // a b | e f

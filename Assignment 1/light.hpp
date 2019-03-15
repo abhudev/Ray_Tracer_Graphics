@@ -13,6 +13,8 @@ public:
     Point loc;
 
     LightSrc(const Color& c, const Point& p);
+
+    bool get_mesh(std::ofstream& fout);
 };
 
 inline double get_diffuse(const vec3d& normal_rd, const vec3d& light_rd){
@@ -34,6 +36,6 @@ inline void get_reflected(const vec3d& normal_rd, const vec3d& light_rd, vec3d& 
 // Returns false if Total Internal Reflection
 bool get_refracted(const vec3d& N, const vec3d& I, const double& mu, vec3d& T);
 
-void light_src_interaction(Point& startPoint, Object* objcur, std::vector<Object*>& list_obj, std::vector<LightSrc>& light_sources, vec3d& cast_rd, Plane& bk_plane, Color& clr, bool check_normal, Ray& normal_ray);
+void light_src_interaction(Point& startPoint, Object* objcur, std::vector<Object*>& list_obj, std::vector<LightSrc>& light_sources, vec3d& cast_rd, Plane& bk_plane, Color& clr, bool check_normal, Ray& normal_ray, std::vector<pvv>& ray_store);
 
 #endif
