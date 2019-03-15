@@ -8,3 +8,13 @@ obj/
 
 tracer
 a.out
+
+# A1 externals
+**/opengl_visualization/external/AntTweakBar-1.16/
+**/opengl_visualization/external/assimp-3.0.1270/
+**/opengl_visualization/external/bullet-2.81-rev2613/
+**/opengl_visualization/external/glew-1.13.0/
+**/opengl_visualization/external/glfw-3.1.2/
+**/opengl_visualization/external/glm-0.9.7.1/
+**/opengl_visualization/external/rpavlik-cmake-modules-fe2273/
+**/opengl_visualization/tessellation/
